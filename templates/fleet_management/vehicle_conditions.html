@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehicles Conditions | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    {% if vehicle_conditions_not_added %}
+        <h3>Vehicle condition not added yet, <a href="{% url 'set_vehicle_condition' %}">add now!</a></h3>
+    {% else %}
+        {% for condition in conditions %}
+            <p>Vehicle number: <b>{{ condition.vehicle.number }}</b>,
+            model: <b>{{ condition.vehicle.model }}</b>  is
+            {% if condition.is_ok %}<b class="text-success">OK for Trip!</b>
+            {% else %}<b class="text-danger">Not OK for Trip!</b>{% endif %}<br>
+
+        {% endfor %}
+        <hr>
+        <b><a href="{% url 'set_vehicle_condition' %}?date={{ date }}">Update Vehicle condition</a></b>
+
+    {% endif %}
+
+{% endblock %}

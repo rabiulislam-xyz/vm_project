@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %} Vehicles Conditions | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <form action="" method="post">{% csrf_token %}
+        {% if vehicle_conditions_not_added %}
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Number</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">is OK?</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for vehicle in vehicles %}
+                    <tr>
+                        <td>{{ vehicle.number }}</td>
+                        <td>{{ vehicle.model }}</td>
+                        <td><input type="checkbox" >
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Number</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">is OK?</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for condition in conditions %}
+                    <tr>
+                        <td>{{ condition.vehicle.number }}</td>
+                        <td>{{ condition.vehicle.model }}</td>
+                        <td><input type="checkbox"
+                                   class="form-check-input"
+                                   name="{{ condition.vehicle.number }}"
+                                   {% if condition.is_ok %}checked {% endif %}>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <button type="submit" class="btn btn-info float-right">submit</button>
+    </form>
+
+{% endblock %}

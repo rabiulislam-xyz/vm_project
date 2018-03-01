@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Trip Form | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <div class="col-md-4 col-md-offset-4">
+        <div class="form-group">
+
+
+            {% if form.errors %}
+                <p class="help-block">resolve the errors!</p>
+            {% endif %}
+
+            <form action="" method="post">{% csrf_token %}
+                {% for field in trip_form %}
+                    <div class="form-group">
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <span style="color: red"> {{ error }} </span><br/>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="input-group">
+                            <span class="input-group-addon"><b>{{ field.label }}</b></span>
+                            {{ field }}
+                        </div>
+                        <p class="help-block">{{ field.help_text }}</p>
+                    </div>
+                {% endfor %}
+                <input type="submit" value="Submit" class="btn btn-default center-block"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}

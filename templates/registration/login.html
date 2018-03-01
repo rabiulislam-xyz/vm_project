@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="col-md-4 col-md-offset-4">
+        <div class="form-group">
+
+        <p class="help-block">usernames:<br>
+            <b>super_admin</b><br>
+            <b>operation_manager</b><br>
+            <b>branch_maneger</b><br>
+            <b>vehicle_maneger</b></p>
+        <p class="help-block">password: <b>itsverysecrete</b></p>
+
+            {% if form.errors %}
+                <p class="help-block">Your username and password didn't match. Please try again.</p>
+            {% endif %}
+
+            {% if next %}
+                {% if user.is_authenticated %}
+                    <p class="help-block">Your account doesn't have access to this page. To proceed,
+                        please login with an account that has access.</p>
+                {% else %}
+                    <p class="help-block">Please login to see this page.</p>
+                {% endif %}
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <div>
+                    <td>{{ form.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </div>
+                <div>
+                    <td>{{ form.password.label_tag }}</td>
+                    <td>{{ form.password }}</td>
+                </div>
+
+                <div>
+                    <input type="submit" value="Login" class="btn btn-default center-block"/>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </div>
+            </form>
+
+
+            <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+        </div>
+    </div>
+
+{% endblock %}

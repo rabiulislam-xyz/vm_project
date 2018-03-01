@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Available Vehicles  | {{ block.super }}{% endblock %}
+
+{% block content %}
+
+    <div class="col-md-4">
+    <h4>Available Vehicles</h4>
+        {% for vehicle in vehicles %}
+            <p>number: <b>{{ vehicle.vehicle.number }}</b>, model: <b>{{ vehicle.vehicle.model }}</b></p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-8">
+    <h4>Trips for {{ date }}</h4>
+        {% for trip in trips %}
+            <p>Vehicle No: <b>{{ trip.vehicle }}</b>
+            from <b>{{ trip.origin.name }}</b>
+            to <b>{{ trip.destination.name }}</b>
+                {% if trip.via_list %}via <i>{{ trip.via_list }}</i>{% endif %}
+            (driver <b>{{ trip.driver }}</b>)</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

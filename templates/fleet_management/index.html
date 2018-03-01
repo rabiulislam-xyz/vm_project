@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <style>
+        .coder-counter {
+            background: mintcream;
+            color: black;
+        }
+
+        .coder-counter-box {
+            border-right: 1px solid peachpuff;
+            padding: 30px 0px 30px 0px;
+        }
+    </style>
+{% endblock css %}
+
+{% block content %}
+
+    {{ total_Routes }}<br>
+    {{ total_Trips }}<br>
+    {{ total_vehicles }}<br>
+    {{ total_staffs }}<br>
+
+
+    <div class="coder-counter">
+        <div class="container">
+            {% for item, count in total.items %}
+                <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="coder-counter-box">
+                        <h2>{{ count }}</h2>
+                        <p>{{ item }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
