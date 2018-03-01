@@ -5,48 +5,48 @@
 {% block content %}
 
     <form action="" method="post">{% csrf_token %}
-         <h4>Vehicles Will Leave:</h4>
-            <table class="table">
-                <thead>
+        <h4>Vehicles Will Leave:</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Trip No</th>
+                <th scope="col">Route</th>
+                <th scope="col">is Leaved</th>
+                <th scope="col">Change Info!</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for vehicle in vehicles_will_leave %}
                 <tr>
-                    <th scope="col">Vehicle</th>
-                    <th scope="col">Trip No</th>
-                    <th scope="col">Route</th>
-                    <th scope="col">is Leaved</th>
-                    <th scope="col">Change Info!</th>
+                    <td>{{ vehicle.trip.vehicle.number }}</td>
+                    <td>{{ vehicle.trip.id }}</td>
+                    <td>{{ vehicle.route.name }}</td>
+                    <td>
+                        {% if vehicle.is_leaved %}
+                            <b class="text-primary">LEAVED at {{ vehicle.leaved_at }}
+                            </b>{% else %}
+                            <b class="text-warning">NOT LEAVED!</b>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="submit"
+                                name="change_info"
+                                class="btn btn-default"
+                                value="{{ vehicle.id }} {{ vehicle.route.id }} is_leaved">
+                            {% if vehicle.is_leaved %}not leaved?{% else %}leaved?{% endif %}
+                        </button>
+
+                    </td>
                 </tr>
-                </thead>
+            {% endfor %}
+            </tbody>
+        </table>
 
-                <tbody>
-                {% for vehicle in vehicles_will_leave %}
-                    <tr>
-                        <td>{{ vehicle.trip.vehicle.number }}</td>
-                        <td>{{ vehicle.trip.id }}</td>
-                        <td>{{ vehicle.route.name }}</td>
-                        <td>
-                            {% if vehicle.is_leaved %}
-                                <b class="text-primary">LEAVED at {{ vehicle.leaved_at }}
-                                </b>{% else %}
-                                <b class="text-warning">NOT LEAVED!</b>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <button type="submit"
-                                    name="change_info"
-                                    class="btn btn-default"
-                                    value="{{ vehicle.id }} {{ vehicle.route.id }} is_leaved">
-                                {% if vehicle.is_leaved %}not leaved?{% else %}leaved?{% endif %}
-                            </button>
-
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        <br><br><br>
+        <br>
         <hr>
-            <h4>vehicles will arrive:</h4>
+        <h4>vehicles will arrive:</h4>
 
 
         <table class="table">
@@ -87,60 +87,60 @@
         </table>
 
 
-        <br><br><br>
+        <br>
         <hr>
 
-            <h4>Vehicles Via:</h4>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Vehicle</th>
-                    <th scope="col">Trip No</th>
-                    <th scope="col">Route</th>
-                    <th scope="col">is Arrived</th>
-                    <th scope="col">is Leaved</th>
-                    <th scope="col">Change Info!</th>
-                </tr>
-                </thead>
+        <h4>Vehicles Via:</h4>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Trip No</th>
+                <th scope="col">Route</th>
+                <th scope="col">is Arrived</th>
+                <th scope="col">is Leaved</th>
+                <th scope="col">Change Info!</th>
+            </tr>
+            </thead>
 
-                <tbody>
-                {% for vehicle in vehicles_via %}
-                    <tr>
-                        <td>{{ vehicle.trip.vehicle.number }}</td>
-                        <td>{{ vehicle.trip.id }}</td>
-                        <td>{{ vehicle.route.name }}</td>
-                        <td>
-                            {% if vehicle.is_arrived %}
-                                <b class="text-primary">ARRIVED at {{ vehicle.arrived_at }}
-                                </b>{% else %}
-                                <b class="text-warning">NOT ARRIVED!</b>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if vehicle.is_leaved %}
-                                <b class="text-primary">LEAVED at {{ vehicle.leaved_at }}
-                                </b>{% else %}
-                                <b class="text-warning">NOT LEAVED!</b>
-                            {% endif %}
-                        </td>
-                        <td>
+            <tbody>
+            {% for vehicle in vehicles_via %}
+                <tr>
+                    <td>{{ vehicle.trip.vehicle.number }}</td>
+                    <td>{{ vehicle.trip.id }}</td>
+                    <td>{{ vehicle.route.name }}</td>
+                    <td>
+                        {% if vehicle.is_arrived %}
+                            <b class="text-primary">ARRIVED at {{ vehicle.arrived_at }}
+                            </b>{% else %}
+                            <b class="text-warning">NOT ARRIVED!</b>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if vehicle.is_leaved %}
+                            <b class="text-primary">LEAVED at {{ vehicle.leaved_at }}
+                            </b>{% else %}
+                            <b class="text-warning">NOT LEAVED!</b>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="submit"
+                                name="change_info"
+                                class="btn btn-default"
+                                value="{{ vehicle.id }} {{ vehicle.route.id }} is_arrived">
+                            {% if vehicle.is_arrived %}not arrived?{% else %}arrived?{% endif %}
                             <button type="submit"
                                     name="change_info"
                                     class="btn btn-default"
                                     value="{{ vehicle.id }} {{ vehicle.route.id }} is_leaved">
                                 {% if vehicle.is_leaved %}not leaved?{% else %}leaved?{% endif %}
                             </button>
-                            <button type="submit"
-                                    name="change_info"
-                                    class="btn btn-default"
-                                    value="{{ vehicle.id }} {{ vehicle.route.id }} is_arrived">
-                                {% if vehicle.is_arrived %}not arrived?{% else %}arrived?{% endif %}
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </form>
 
 {% endblock %}
