@@ -92,7 +92,7 @@ def available_vehicles(request):
     trips = Trip.objects.filter(date=d).select_related('vehicle').all()
     context['trips'] = trips
 
-    vehicles_condition = VehicleCondition.objects.filter(date=d).filter(is_ok=True).select_related('vehicles').all()
+    vehicles_condition = VehicleCondition.objects.filter(date=d).filter(is_ok=True).select_related('vehicle').all()
     trips_vehicles = [trip.vehicle for trip in trips]
 
     vehicles = vehicles_condition.exclude(vehicle__in=trips_vehicles)
