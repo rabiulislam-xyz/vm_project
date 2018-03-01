@@ -29,10 +29,13 @@ def index(request):
 # views for vehicle manager
 @login_required
 def vehicle_condition(request):
+    # date would be current date if no specific date
+    # provided via get parameters
     d = request.GET.get('date')
     d = datetime.strptime(d, '%Y-%m-%d') if d else now().today()
     context = {'date': d.strftime('%Y-%m-%d')}
 
+    # set new conditions for new date or update existing conditions
     conditions = VehicleCondition.objects.filter(date=d)
     if not conditions.exists():
         context['vehicle_conditions_not_added'] = True
@@ -45,6 +48,8 @@ def vehicle_condition(request):
 @login_required
 @permission_required('fleet_management.add_vehiclecondition')
 def set_vehicle_condition(request):
+    # date would be current date if no specific date
+    # provided via get parameters
     d = request.GET.get('date')
     d = datetime.strptime(d, '%Y-%m-%d') if d else now().today()
     context = {'date': d.strftime('%Y-%m-%d')}
@@ -52,9 +57,11 @@ def set_vehicle_condition(request):
     conditions = VehicleCondition.objects.filter(date=d)
 
     if request.method == 'POST':
+        # set conditions for every vehicle for every date
         vehicles = Vehicle.objects.all()
         for v in vehicles:
             condition, created = VehicleCondition.objects.get_or_create(vehicle=v, date=d)
+            # if condition is ok then reverse it, otherwise reverse it!
             condition.is_ok = True if request.POST.get(str(v.number)) else False
             condition.save()
         messages.success(request, 'Vehicle Conditions for {} has been Set Successfully'.format(d.strftime('%Y-%m-%d')))
@@ -73,15 +80,19 @@ def set_vehicle_condition(request):
 # views for operation manager
 @login_required
 def available_vehicles(request):
+    # date would be current date if no specific date
+    # provided via get parameters
     d = request.GET.get('date')
     d = datetime.strptime(d, '%Y-%m-%d') if d else now().today()
     context = {'date': d.strftime('%Y-%m-%d')}
 
+    # only those vehicles will be in list of available vehicles
+    # which are good conditions and not confirmed for any trip for
+    # this date!
     trips = Trip.objects.filter(date=d).select_related('vehicle').all()
     context['trips'] = trips
 
-    vehicles_condition = VehicleCondition.objects.filter(date=d).filter(is_ok=True)
-    print(vehicles_condition)
+    vehicles_condition = VehicleCondition.objects.filter(date=d).filter(is_ok=True).select_related('vehicles').all()
     trips_vehicles = [trip.vehicle for trip in trips]
 
     vehicles = vehicles_condition.exclude(vehicle__in=trips_vehicles)
@@ -93,6 +104,8 @@ def available_vehicles(request):
 @login_required
 @permission_required('fleet_management.add_trip')
 def set_trip(request):
+    # date would be current date if no specific date
+    # provided via get parameters
     d = request.GET.get('date')
     d = datetime.strptime(d, '%Y-%m-%d') if d else now().today()
     context = {'date': d.strftime('%Y-%m-%d')}
@@ -115,6 +128,8 @@ def set_trip(request):
 @login_required
 @permission_required('fleet_management.add_vehicleinoutinfo')
 def set_vehicle_in_out_info(request):
+    # date would be current date if no specific date
+    # provided via get parameters
     d = request.GET.get('date')
     d = datetime.strptime(d, '%Y-%m-%d') if d else now().today()
     context = {'date': d.strftime('%Y-%m-%d')}
@@ -133,6 +148,8 @@ def set_vehicle_in_out_info(request):
         trip.save()
         messages.success(request, 'Vehicle info Updated Successfully')
 
+    # We have to differentiate trips to comment easily
+    # about its leave/arrival information.
     trips_will_leave = trips.filter(origin__branch_manager=request.user)
     trips_will_arrive = trips.filter(destination__branch_manager=request.user)
     trips_via = trips.filter(via__branch_manager=request.user)
